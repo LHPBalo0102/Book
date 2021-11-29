@@ -42,5 +42,8 @@ class SearchController extends AbstractController
         if ($code) {
             $book = $bookRepository->findBookByCode($code);
         }
+
+        dump($book);
+        die();
     }
 }
