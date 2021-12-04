@@ -7,10 +7,9 @@
     {% block head_metas %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="robots"
-              content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate, nocache"/>
+        <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate, nocache" />
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <meta name="generator" content="EasyAdmin"/>
+        <meta name="generator" content="EasyAdmin" />
     {% endblock head_metas %}
 
     {% set page_title_block_output %}{% block page_title %}{{ block('content_title') }}{% endblock %}{% endset %}
@@ -74,7 +73,7 @@
                     </span>
                 </span>
             {% else %}
-                <img class="user-avatar" src="{{ ea.userMenu.avatarUrl }}"/>
+                <img class="user-avatar" src="{{ ea.userMenu.avatarUrl }}" />
             {% endif %}
         {% endset %}
 
@@ -89,9 +88,7 @@
                         <span class="user-name">{{ ea.user is null ? 'user.anonymous'|trans(domain = 'EasyAdminBundle') : ea.userMenu.name }}</span>
                     </div>
                 </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
+                <li><hr class="dropdown-divider"></li>
 
                 {% block user_menu %}
                     {% if ea.userMenu.items|length > 0 %}
@@ -103,8 +100,7 @@
                                     <a href="{{ item.linkUrl }}" class="dropdown-item user-action {{ item.cssClass }}"
                                        target="{{ item.linkTarget }}" rel="{{ item.linkRel }}"
                                        referrerpolicy="origin-when-cross-origin">
-                                        {% if item.icon is not empty %}<i
-                                            class="fa fa-fw {{ item.icon }}"></i>{% endif %}
+                                        {% if item.icon is not empty %}<i class="fa fa-fw {{ item.icon }}"></i>{% endif %}
                                         <span>{{ item.label }}</span>
                                     </a>
                                 {% endif %}
@@ -125,16 +121,14 @@
 
                         <div id="responsive-header-logo" class="text-truncate">
                             {% block responsive_header_logo %}
-                                <a class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}"
-                                   href="{{ path(ea.dashboardRouteName) }}">
+                                <a class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
                                     {{ ea.dashboardTitle|raw }}
                                 </a>
                             {% endblock responsive_header_logo %}
                         </div>
 
                         <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
-                            <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5"
-                               aria-expanded="false">
+                            <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
                                 {# to make the site design consistent, always display the user avatar in responsive header
                                    and hide the user name (because there's no space left) regardless of the user config #}
                                 {% if ea.userMenu.avatarDisplayed %}
@@ -154,19 +148,19 @@
                         {% block sidebar %}
                             <header class="main-header">
                                 {% block header %}
-                                    <nav class="navbar" role="navigation">
-                                        {% block header_navbar %}
-                                            <div id="header-logo">
-                                                {% block header_logo %}
-                                                    <a class="logo" title="{{ ea.dashboardTitle|striptags }}"
-                                                       href="{{ path(ea.dashboardRouteName) }}">
-                                                        <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
-                                                        <span class="logo-compact"><i class="fas fa-home"></i></span>
-                                                    </a>
-                                                {% endblock header_logo %}
-                                            </div>
-                                        {% endblock header_navbar %}
-                                    </nav>
+                                <nav class="navbar" role="navigation">
+                                    {% block header_navbar %}
+                                        <div id="header-logo" class="navbar-brand">
+                                            {% block header_logo %}
+                                                <a class="logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                                                    <span class="logo-custom">{{ ea.dashboardTitle|raw }}</span>
+                                                    <span class="logo-compact"><i class="fas fa-home"></i></span>
+                                                </a>
+
+                                            {% endblock header_logo %}
+                                        </div>
+                                    {% endblock header_navbar %}
+                                </nav>
                                 {% endblock header %}
                             </header>
 
@@ -190,33 +184,22 @@
                                         <form class="form-action-search" method="get">
                                             {% block search_form %}
                                                 <input type="hidden" name="crudAction" value="index">
-                                                <input type="hidden" name="crudControllerFqcn"
-                                                       value="{{ ea.request.query.get('crudControllerFqcn') }}">
-                                                <input type="hidden" name="menuIndex"
-                                                       value="{{ ea.request.query.get('menuIndex') }}">
-                                                <input type="hidden" name="submenuIndex"
-                                                       value="{{ ea.request.query.get('submenuIndex') }}">
+                                                <input type="hidden" name="crudControllerFqcn" value="{{ ea.request.query.get('crudControllerFqcn') }}">
+                                                <input type="hidden" name="menuIndex" value="{{ ea.request.query.get('menuIndex') }}">
+                                                <input type="hidden" name="submenuIndex" value="{{ ea.request.query.get('submenuIndex') }}">
                                                 <input type="hidden" name="page" value="1">
-                                                <input type="hidden" name="signature"
-                                                       value="{{ ea_url().unsetAll().setAction('index').setController(ea.request.query.get('crudControllerFqcn')).getSignature() }}">
+                                                <input type="hidden" name="signature" value="{{ ea_url().unsetAll().setAction('index').setController(ea.request.query.get('crudControllerFqcn')).getSignature() }}">
 
                                                 <div class="form-group">
                                                     <div class="form-widget">
                                                         <i class="fas fa-search content-search-icon"></i>
 
-                                                        <label class="content-search-label"
-                                                               data-value="{{ app.request.get('query') }}">
-                                                            <input class="form-control {{ app.request.get('query') is null ? 'is-blank' }}"
-                                                                   type="search" name="query"
-                                                                   value="{{ app.request.get('query') ?? '' }}"
-                                                                   placeholder="{{ 'action.search'|trans(ea.i18n.translationParameters, 'EasyAdminBundle') }}"
-                                                                   spellcheck="false" autocorrect="false"
-                                                                   onInput="this.parentNode.dataset.value=this.value">
+                                                        <label class="content-search-label" data-value="{{ app.request.get('query') }}">
+                                                            <input class="form-control {{ app.request.get('query') is null ? 'is-blank' }}" type="search" name="query" value="{{ app.request.get('query') ?? '' }}" placeholder="{{ 'action.search'|trans(ea.i18n.translationParameters, 'EasyAdminBundle') }}" spellcheck="false" autocorrect="false" onInput="this.parentNode.dataset.value=this.value">
                                                         </label>
 
                                                         {% if app.request.get('query') %}
-                                                            <a href="{{ ea_url().unset('query') }}"
-                                                               class="content-search-reset">
+                                                            <a href="{{ ea_url().unset('query') }}" class="content-search-reset">
                                                                 <i class="fas fa-fw fa-times"></i>
                                                             </a>
                                                         {% endif %}
@@ -231,8 +214,7 @@
                             <div class="navbar-custom-menu">
                                 {% block header_custom_menu %}
                                     <div class="dropdown user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
-                                        <a class="user-details" type="button" data-bs-toggle="dropdown"
-                                           data-bs-offset="0,5" aria-expanded="false">
+                                        <a class="user-details" type="button" data-bs-toggle="dropdown" data-bs-offset="0,5" aria-expanded="false">
                                             {{ user_menu_avatar }}
                                             {% if ea.userMenu.isNameDisplayed %}
                                                 <span class="user-name">{{ ea.userMenu.name }}</span>
@@ -248,7 +230,6 @@
 
                     <div class="content-wrapper">
                         {% block content %}
-                            {{ form(form) }}
                             <article class="content">
                                 {% block content_header_wrapper %}
                                     {% set has_help_message = (ea.crud.helpMessage ?? '') is not empty %}
@@ -261,8 +242,7 @@
                                                     {% block content_help %}
                                                         {% if has_help_message %}
                                                             <span class="content-header-help">
-                                                            <i class="far fa-question-circle" data-bs-toggle="tooltip"
-                                                               title="{{ ea.crud.helpMessage|e('html_attr') }}"></i>
+                                                            <i class="far fa-question-circle" data-bs-toggle="tooltip" title="{{ ea.crud.helpMessage|e('html_attr') }}"></i>
                                                         </span>
                                                         {% endif %}
                                                     {% endblock %}

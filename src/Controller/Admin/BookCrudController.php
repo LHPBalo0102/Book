@@ -31,7 +31,19 @@ class BookCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable(Action::EDIT);
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setIcon('fas fa-book')->setCssClass('btn btn-success');
+            })
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->setIcon('fas fa-edit text-dark')->setCssClass('btn btn-warning text-dark');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setIcon('fas fa-eye text-dark')->setCssClass('btn btn-info text-dark');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action->setIcon('fas fa-trash text-dark')->setCssClass('btn btn-danger text-dark');
+            });
     }
 
     public function configureFields(string $pageName): iterable
@@ -50,9 +62,7 @@ class BookCrudController extends AbstractCrudController
                 ])
                 ->setFormTypeOption('disabled', 'disabled');
 
-            yield MoneyField::new('value', 'VALUE')
-                ->setCurrency('USD')
-                ->setFormTypeOption('disabled', 'disabled');
+            yield NumberField::new('value', 'VALUE (USD)');
 
             yield AssociationField::new('type', 'TYPE')
                 ->setFormTypeOption('disabled', 'disabled');
@@ -67,8 +77,7 @@ class BookCrudController extends AbstractCrudController
                     'Tre' => 'Tre'
                 ]);
 
-            yield MoneyField::new('value', 'VALUE')
-                ->setCurrency('USD');
+            yield NumberField::new('value', 'VALUE (USD)');
 
             yield AssociationField::new('type', 'TYPE');
             yield NumberField::new('quantity', 'QUANTITY');

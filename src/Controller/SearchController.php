@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Book;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -13,37 +14,44 @@ use Symfony\Component\Routing\Annotation\Route;
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="search")
+     * @Route("/searchForm", name="searchForm")
      */
-    public function searchBar(): Response
+    public function searchAction(Request $request): Response
     {
-        $form = $this->createFormBuilder(null)
-            ->setAction($this->generateUrl('handleSearch'))
+        $form = $this->createFormBuilder()
             ->add('code', TextType::class)
             ->add('search', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary'
-                ]
+                'label' => 'Search'
             ])
             ->getForm();
 
-        return $this->render('search/searchBar.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
+        $form->handleRequest($request);
 
-    /**
-     * @Route("/handleSearch", name="handleSearch")
-     * @param Request $request
-     */
-    public function handleSearch(Request $request, BookRepository $bookRepository)
-    {
-        $code = $request->request->get('form')['code'];
-        if ($code) {
-            $book = $bookRepository->findBookByCode($code);
+        $results = $this->getDoctrine()->getManager()->getRepository(Book::class)->findAll();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $code = $form->getData();
+            $results = $this->getDoctrine()->getManager()->getRepository(Book::class)->findBookByCode($code['code']);
+
+            if (count($results) != 1) {
+                $this->addFlash('warning', 'Sorry!! Please type exactly the CODE of Book');
+                return $this->render('search/index.html.twig', [
+                    'form' => $form->createView(),
+                    'results' => $results
+                ]);
+            } else {
+                $this->addFlash('success', 'Here is your Book');
+                return $this->render('search/index.html.twig', [
+                    'form' => $form->createView(),
+                    'results' => $results
+                ]);
+            }
         }
 
-        dump($book);
-        die();
+
+        return $this->render('search/index.html.twig', [
+            'form' => $form->createView(),
+            'results' => $results
+        ]);
     }
 }
