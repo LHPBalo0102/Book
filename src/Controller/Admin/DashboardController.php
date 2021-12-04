@@ -31,7 +31,9 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Book Management');
+            ->setTitle('Book Management')
+            ->setFaviconPath('')
+            ->disableUrlSignatures();
 
     }
 
@@ -40,6 +42,6 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToCrud('Book', 'fas fa-book', Book::class);
         yield MenuItem::linkToCrud('Book Type', 'fas fa-list', BookType::class);
-        yield MenuItem::linkToRoute('Search for Book', 'fas fa-search', 'search');
+        yield MenuItem::linkToRoute('Search for Book', 'fas fa-search', 'searchForm');
     }
 }
