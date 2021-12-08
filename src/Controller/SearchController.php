@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Book;
 use App\Repository\BookRepository;
+use App\Services\CartService;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,42 +18,65 @@ class SearchController extends AbstractController
     /**
      * @Route("/searchForm", name="searchForm")
      */
-    public function searchAction(Request $request): Response
+    public function searchAction(Request $request, BookRepository $bookRepository, CartService $cartService): Response
     {
         $form = $this->createFormBuilder()
             ->add('code', TextType::class)
-            ->add('search', SubmitType::class, [
-                'label' => 'Search'
+            ->add('Submit', SubmitType::class, [
+                'label' => 'Submit'
             ])
             ->getForm();
 
         $form->handleRequest($request);
-
-        $results = $this->getDoctrine()->getManager()->getRepository(Book::class)->findAll();
+        $code = $form->getData();
+        $results = null;
+        $cartWithData = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
             $code = $form->getData();
-            $results = $this->getDoctrine()->getManager()->getRepository(Book::class)->findBookByCode($code['code']);
 
-            if (count($results) != 1) {
+            $results = $bookRepository->findOneBy(['code' => $code]);
+
+            if ($results == null) {
                 $this->addFlash('warning', 'Sorry!! Please type exactly the CODE of Book');
+                $cartWithData = $cartService->getFullCart();
+
                 return $this->render('search/index.html.twig', [
                     'form' => $form->createView(),
-                    'results' => $results
+                    'results' => null,
+                    'code' => $code['code'],
+                    'items' => $cartWithData
                 ]);
             } else {
                 $this->addFlash('success', 'Here is your Book');
+
+                $cartService->add($code['code']);
+                $cartWithData = $cartService->getFullCart();
+                
                 return $this->render('search/index.html.twig', [
                     'form' => $form->createView(),
-                    'results' => $results
+                    'results' => $results,
+                    'code' => $code['code'],
+                    'items' => $cartWithData
                 ]);
             }
         }
 
-
         return $this->render('search/index.html.twig', [
             'form' => $form->createView(),
-            'results' => $results
+            'results' => $results,
+            'code' => $code['code'],
+            'items' => $cartWithData
         ]);
+    }
+
+    /**
+     * @Route("/searchForm/remove/{code}", name="cart_remove")
+     */
+    public function remove($code, CartService $cartService)
+    {
+        $cartService->remove($code);
+
+        return $this->redirectToRoute('searchForm');
     }
 }

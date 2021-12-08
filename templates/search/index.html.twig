@@ -214,8 +214,9 @@
 
                                 <section id="main" class="content-body">
                                     {% block main %}
-
-                                        <table class = "table">
+                                    <div id="search-table" style="margin-bottom: 100px">
+                                        <h3>Search Result</h3>
+                                        <table class = "table" id="export-book-table">
                                             <tr>
                                                 <th>ID</th>
                                                 <th>CODE</th>
@@ -226,19 +227,63 @@
                                                 <th>VALUE (USD)</th>
                                                 <th>TYPE</th>
                                             </tr>
-                                            {% for result in results %}
+
+                                                {% if results is not null %}
                                                 <tr>
-                                                    <td>{{ result.id }}</td>
-                                                    <td>{{ result.code }}</td>
-                                                    <td>{{ result.book }}</td>
-                                                    <td>{{ result.author }}</td>
-                                                    <td>{{ result.publisher }}</td>
-                                                    <td>{{ result.quantity }}</td>
-                                                    <td>{{ result.value}}</td>
-                                                    <td>{{ result.type }}</td>
+                                                    <td>{{ results.id }}</td>
+                                                    <td>{{ results.code }}</td>
+                                                    <td>{{ results.book }}</td>
+                                                    <td>{{ results.author }}</td>
+                                                    <td>{{ results.publisher }}</td>
+                                                    <td>{{ results.quantity }}</td>
+                                                    <td>{{ results.value}}</td>
+                                                    <td>{{ results.type }}</td>
                                                 </tr>
-                                            {% endfor %}
+                                                {% endif %}
                                         </table>
+                                    </div>
+
+                                    <div id="cart-table">
+                                        <h3>Cart</h3>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>CODE</th>
+                                                <th>BOOK</th>
+                                                <th>AUTHOR</th>
+                                                <th>PUBLISHER</th>
+                                                <th>QUANTITY (In House)</th>
+                                                <th>VALUE (USD)</th>
+                                                <th>TYPE</th>
+                                                <th>QUANTITY (In cart)</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            {% if items | length > 0 %}
+                                                <tbody>
+                                                {% for item in items %}
+                                                    <tr>
+                                                        <td>{{ item.book.id }}</td>
+                                                        <td>{{ item.book.code }}</td>
+                                                        <td>{{ item.book.book }}</td>
+                                                        <td>{{ item.book.author }}</td>
+                                                        <td>{{ item.book.publisher }}</td>
+                                                        <td>{{ item.book.quantity }}</td>
+                                                        <td>{{ item.book.value}}</td>
+                                                        <td>{{ item.book.type }}</td>
+                                                        <td>{{ item.quantity }}</td>
+                                                        <td>
+                                                            <a href="{{ path('cart_remove', {'code': item.book.code}) }}" class="btn btn-danger">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            {% endif %}
+                                        </table>
+                                    </div>
                                     {% endblock %}
                                 </section>
 
