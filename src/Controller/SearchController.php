@@ -84,5 +84,7 @@ class SearchController extends AbstractController
 
         $cartService->remove($code);
 
+        $response = new Response();
+        $response->send();
     }
 }
