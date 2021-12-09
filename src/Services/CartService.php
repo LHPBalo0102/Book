@@ -17,6 +17,13 @@ class CartService
         $this->bookRepository = $bookRepository;
     }
 
+    public function getQuantityOfItem($code)
+    {
+        $cart = $this->session->get('cart', []);
+
+        return $cart[$code];
+    }
+
     public function add($code)
     {
         $cart = $this->session->get('cart', []);
@@ -51,12 +58,10 @@ class CartService
         foreach($cart as $code => $quantity) {
             $cartWithData[] = [
                 'book' => $this->bookRepository->findOneBy(['code' => $code]),
-                'quantity' => $quantity
+                'quantity' => $quantity,
             ];
         }
 
         return $cartWithData;
     }
-
-
 }
