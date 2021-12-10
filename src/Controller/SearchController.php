@@ -3,16 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Book;
-use App\Repository\BookRepository;
 use App\Services\CartService;
-use Doctrine\ORM\EntityManager;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Repository\BookRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SearchController extends AbstractController
 {
@@ -67,7 +65,7 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/searchForm/export/{code}", name="cart_export", methods={"DELETE"})
+     * @Route("/searchForm/export/{code}", name="cart_export", methods={"POST"})
      */
     public function export($code, CartService $cartService, BookRepository $bookRepository)
     {
@@ -75,14 +73,19 @@ class SearchController extends AbstractController
         $qtyInHouse = $book->getQuantity();
         $qtyOfItem = $cartService->getQuantityOfItem($code);
 
-        $qtyAfterExport = $qtyInHouse - $qtyOfItem;
-        $book->setQuantity($qtyAfterExport);
+        if($qtyInHouse < $qtyOfItem) {
+            $this->addFlash('danger', 'This item is out of Quantity!!');
+        } else {
+            $this->addFlash('success', 'Export Successfully Item Code : '. $code . '!!!');
+            $qtyAfterExport = $qtyInHouse - $qtyOfItem;
+            $book->setQuantity($qtyAfterExport);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($book);
-        $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($book);
+            $entityManager->flush();
 
-        $cartService->remove($code);
+            $cartService->remove($code);
+        }
 
         $response = new Response();
         $response->send();
