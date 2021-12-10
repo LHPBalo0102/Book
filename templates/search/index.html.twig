@@ -245,7 +245,7 @@
 
                                     <div id="cart-table">
                                         <h3>Cart</h3>
-                                        <table class="table">
+                                        <table class="table" id="books">
                                             <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -274,7 +274,12 @@
                                                         <td>{{ item.book.type }}</td>
                                                         <td>{{ item.quantity }}</td>
                                                         <td>
-                                                            <a href="{{ path('cart_remove', {'code': item.book.code}) }}" class="btn btn-danger">
+                                                            <a href="#" class="btn btn-success" data-id="{{ item.book.code }}">
+                                                                <i class="fas fa-shopping-cart"> Export Book</i>
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-danger" data-id="{{ item.book.code }}">
                                                                 <i class="fas fa-trash"></i>
                                                             </a>
                                                         </td>
@@ -305,7 +310,9 @@
         </div>
     {% endblock wrapper_wrapper %}
 
-    {% block body_javascript %}{% endblock body_javascript %}
+    {% block body_javascript %}
+        <script src="{{ asset('js/main.js') }}"></script>
+    {% endblock body_javascript %}
 
     {% block configured_body_contents %}
         {% for htmlContent in ea.assets.bodyContents ?? [] %}
