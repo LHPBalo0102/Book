@@ -35,21 +35,4 @@ class BookRepository extends ServiceEntityRepository
         ;
     }
     */
-
-    /**
-     * @param string $code
-     * @return mixed
-     */
-    public function findBookByCode(string $code)
-    {
-        $qb = $this->createQueryBuilder('b');
-        $qb
-            ->where(
-                $qb->expr()->like('b.code', ':code')
-            )
-            ->setParameter('code', '%' . $code . '%');
-        return $qb
-            ->getQuery()
-            ->getResult();
-    }
 }

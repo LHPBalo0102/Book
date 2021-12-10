@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DashboardController extends AbstractDashboardController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/", name="admin")
      */
     public function index(): Response
     {
@@ -42,6 +42,6 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToCrud('Book', 'fas fa-book', Book::class);
         yield MenuItem::linkToCrud('Book Type', 'fas fa-list', BookType::class);
-        yield MenuItem::linkToRoute('Search for Book', 'fas fa-search', 'searchForm');
+        yield MenuItem::linkToRoute('Export Book', 'fas fa-shopping-cart', 'searchForm');
     }
 }

@@ -24,8 +24,8 @@ class BookCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('BOOK LIST')
-            ->setEntityLabelInPlural('BOOKS LIST');
+            ->setEntityLabelInSingular('BOOK')
+            ->setEntityLabelInPlural('BOOKS');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -57,15 +57,15 @@ class BookCrudController extends AbstractCrudController
                 ->setFormTypeOption('disabled', 'disabled');
             yield ChoiceField::new('publisher', 'PUBLISHER')
                 ->setChoices([
-                    'Kim Dong' => 'Kim Dong',
-                    'Tre' => 'Tre'
-                ])
-                ->setFormTypeOption('disabled', 'disabled');
+                    'NXB Kim Dong' => 'Kim Dong',
+                    'NXB Tre' => 'Tre'
+                ]);
 
             yield NumberField::new('value', 'VALUE (USD)');
 
             yield AssociationField::new('type', 'TYPE')
                 ->setFormTypeOption('disabled', 'disabled');
+            yield NumberField::new('quantity', 'QUANTITY');
         } else {
             yield TextField::new('code', 'CODE');
             yield TextField::new('book', 'BOOK');
