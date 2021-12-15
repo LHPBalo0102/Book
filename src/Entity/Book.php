@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as AcmeAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -23,6 +24,7 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @AcmeAssert\FirstLetterOfBookCode
      */
     private $code;
 
@@ -44,6 +46,7 @@ class Book
     /**
      * @ORM\Column(type="integer")
      * @Assert\Positive
+     * @AcmeAssert\MaximumBookQuantity
      */
     private $quantity;
 

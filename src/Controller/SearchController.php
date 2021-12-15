@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Services\CartService;
 use App\Repository\BookRepository;
+use App\Validator\FirstLetterOfBookCode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +21,10 @@ class SearchController extends AbstractController
     public function searchAction(Request $request, BookRepository $bookRepository, CartService $cartService): Response
     {
         $form = $this->createFormBuilder()
-            ->add('code', TextType::class)
+            ->add('code', TextType::class, [
+                'required' => true,
+                'constraints' => [new FirstLetterOfBookCode()]
+            ])
             ->add('Submit', SubmitType::class, [
                 'label' => 'Submit'
             ])
